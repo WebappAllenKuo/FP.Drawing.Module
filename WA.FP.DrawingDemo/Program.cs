@@ -84,6 +84,32 @@ namespace WA.FP.DrawingDemo
             
             System.Console.WriteLine("範例6: 應用範例,繪製三層方框");
             Console.WriteLine(context.Canvas.Render());
-        }
+
+
+			canvas = new Canvas(40, 40);
+			context = new DrawingContext(canvas, new FPoint(0, 20));
+
+			context = context
+				.DrawLine(Direction.UpRight, 15, '*')
+                .DrawLine(Direction.DownRight, 15, '*')
+                .DrawLine(Direction.DownLeft, 15, '*')
+                .DrawLine(Direction.UpLeft, 15, '*')
+                .MoveCursor(5,0)
+				.DrawLine(Direction.UpRight, 10, '*')
+				.DrawLine(Direction.DownRight, 10, '*')
+				.DrawLine(Direction.DownLeft, 10, '*')
+				.DrawLine(Direction.UpLeft, 10, '*')
+				.MoveCursor(5, 0)
+				.DrawLine(Direction.UpRight, 5, '*')
+				.DrawLine(Direction.DownRight, 5, '*')
+				.DrawLine(Direction.DownLeft, 5, '*')
+				.DrawLine(Direction.UpLeft, 5, '*')
+
+				.MoveCursor(5, 0).DrawPixel('*')
+				;
+
+			System.Console.WriteLine("範例7: 應用範例,繪製三層菱形");
+			Console.WriteLine(context.Canvas.Render());
+		}
     }
 }
