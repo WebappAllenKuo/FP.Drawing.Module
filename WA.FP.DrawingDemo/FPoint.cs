@@ -54,7 +54,7 @@ public record DrawingContext(Canvas Canvas, FPoint Cursor)
 
     public DrawingContext DrawPixel(char symbol)
         => DrawingTool.DrawPixel(Canvas, Cursor, symbol);
-        
+
     public DrawingContext DrawLine(Direction direction, int length, char symbol)
         => DrawingTool.DrawLine(Canvas, Cursor, direction, length, symbol);
 
@@ -63,9 +63,23 @@ public record DrawingContext(Canvas Canvas, FPoint Cursor)
 
     public DrawingContext MoveCursor(FPoint newCursor)
         => this with { Cursor = newCursor };
-    
+
     public DrawingContext MoveCursor(int deltaX, int deltaY)
         => this with { Cursor = Cursor.Move(deltaX, deltaY) };
+        
+    public DrawingContext DrawRectangle(int width, int height, char symbol)
+    {
+        var context = this.DrawPixel(symbol);
+        // 上邊
+        context = context.DrawLine(Direction.Right, width - 1, symbol);
+        // 右邊
+        context = context.DrawLine(Direction.Down, height - 1, symbol);
+        // 下邊
+        context = context.DrawLine(Direction.Left, width - 1, symbol);
+        // 左邊
+        context = context.DrawLine(Direction.Up, height - 2, symbol);
+        return context;
+    }
 }
 
 public static class DrawingTool

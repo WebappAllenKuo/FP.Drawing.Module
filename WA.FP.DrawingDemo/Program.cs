@@ -54,6 +54,35 @@ namespace WA.FP.DrawingDemo
             
             System.Console.WriteLine("範例4: 絕對位置,相對位置的Move");
             Console.WriteLine(context.Canvas.Render());
+
+
+            canvas = new Canvas(20, 20);
+            context = new DrawingContext(canvas, new FPoint(0, 0));
+
+            context = context
+                .DrawPixel(new FPoint(0, 0), 'O')
+                .DrawLine(Direction.Right, 5, '*')
+                .DrawLine(Direction.Down, 5, '*')
+                .DrawLine(Direction.Left, 5, '-')
+                .DrawLine(Direction.Up, 4, '|');
+            
+            System.Console.WriteLine("範例5: 應用範例,繪製一個方框");
+            Console.WriteLine(context.Canvas.Render());
+
+
+            canvas = new Canvas(40, 40);
+            context = new DrawingContext(canvas, new FPoint(0, 0));
+
+            context = context
+                .DrawRectangle(40, 40, '#')
+                .MoveCursor(5, 5)
+                .DrawRectangle(30,30, '*')
+                .MoveCursor(5, 5)
+                .DrawRectangle(20,20, '*')
+                ;
+            
+            System.Console.WriteLine("範例6: 應用範例,繪製三層方框");
+            Console.WriteLine(context.Canvas.Render());
         }
     }
 }
