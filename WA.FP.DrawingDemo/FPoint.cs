@@ -40,3 +40,62 @@ public record Canvas(int Width, int Height, ImmutableDictionary<FPoint, char> Pi
         return string.Join('\n', lines);
     }
 }
+
+public enum Direction
+{
+    Up, Down, Left, Right,
+    UpRight, UpLeft, DownRight, DownLeft
+}
+
+public record DrawingContext(Canvas Canvas, FPoint Cursor)
+{
+    public DrawingContext DrawPixel(FPoint point, char symbol)
+        => DrawingTool.DrawPixel(Canvas, point, symbol);
+
+    public DrawingContext DrawLine(Direction direction, int length, char symbol)
+        => DrawingTool.DrawLine(Canvas, Cursor, direction, length, symbol);
+}
+
+public static class DrawingTool
+{
+    private static ImmutableDictionary<Direction, (int deltaX, int deltaY)> DirectionDeltas { get; } =
+        new Dictionary<Direction, (int deltaX, int deltaY)>
+        {
+            { Direction.Up, (0, -1) },
+            { Direction.Down, (0, 1) },
+            { Direction.Left, (-1, 0) },
+            { Direction.Right, (1, 0) },
+            { Direction.UpRight, (1, -1) },
+            { Direction.UpLeft, (-1, -1) },
+            { Direction.DownRight, (1, 1) },
+            { Direction.DownLeft, (-1, 1) },
+        }.ToImmutableDictionary();
+
+    public static DrawingContext DrawPixel(Canvas canvas, FPoint point, char symbol)
+        => new DrawingContext(canvas.DrawPixel(point, symbol), point);
+
+    /// <summary>
+    /// 繪製直線,當下的點不會被繪製,從下一個點開始繪製
+    /// </summary>
+    /// <param name="canvas"></param>
+    /// <param name="start"></param>
+    /// <param name="direction"></param>
+    /// <param name="length"></param>
+    /// <param name="symbol"></param>
+    /// <returns></returns>
+    public static DrawingContext DrawLine(Canvas canvas, FPoint start, Direction direction, int length, char symbol)
+    {
+        var currentCanvas = canvas;
+        var currentPoint = start;
+
+        var (deltaX, deltaY) = DirectionDeltas[direction];
+
+        for (int i = 0; i < length; i++)
+        {
+            currentPoint = currentPoint.Move(deltaX, deltaY);
+            currentCanvas = currentCanvas.DrawPixel(currentPoint, symbol);
+        }
+
+        return new DrawingContext(currentCanvas, currentPoint);
+    }
+}
