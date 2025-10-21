@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet --version)",
+      "Bash(dotnet new console -n WA.FP.DrawingDemo -f net8.0)",
+      "Bash(dotnet build)",
+      "Bash(dotnet run)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
