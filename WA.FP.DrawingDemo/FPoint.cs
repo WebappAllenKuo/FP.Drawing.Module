@@ -69,7 +69,7 @@ public record DrawingContext(Canvas Canvas, FPoint Cursor)
         
     public DrawingContext DrawRectangle(int width, int height, char symbol)
     {
-        var context = this.DrawPixel(symbol);
+        var context = this; //.DrawPixel(symbol);
         // 上邊
         context = context.DrawLine(Direction.Right, width - 1, symbol);
         // 右邊
@@ -77,9 +77,38 @@ public record DrawingContext(Canvas Canvas, FPoint Cursor)
         // 下邊
         context = context.DrawLine(Direction.Left, width - 1, symbol);
         // 左邊
-        context = context.DrawLine(Direction.Up, height - 2, symbol);
+        context = context.DrawLine(Direction.Up, height - 1, symbol);
         return context;
     }
+
+	public DrawingContext Draw靠左正向三角形(int rows, char symbol)
+	{
+		var context = this;
+        int startX = context.Cursor.X;
+        int startY = context.Cursor.Y;
+
+		context = context.DrawLine(Direction.Down, rows - 1, symbol); //垂直向下
+		context = context.DrawLine(Direction.Right, rows - 1, symbol); // 水平向右
+																	   // 下邊
+		context = context.DrawLineWhile(Direction.UpLeft, point => point.X >= startX && point.Y >= startY, symbol); // 斜邊
+
+		return context;
+	}
+
+	public DrawingContext Draw靠左倒向三角形(int rows, char symbol)
+	{
+		var context = this;
+		int startX = context.Cursor.X;
+		int startY = context.Cursor.Y;
+
+		context = context.DrawPixel(symbol).DrawLine(Direction.Down, rows - 1, symbol); // 垂直向下
+		context = context.MoveCursor(new FPoint(startX, startY));
+		context = context.DrawLine(Direction.Right, rows - 1, symbol); //水平向右
+        
+        context = context.DrawLineWhile(Direction.DownLeft, point => point.X >= startX , symbol); // 斜邊
+
+		return context;
+	}
 }
 
 public static class DrawingTool
