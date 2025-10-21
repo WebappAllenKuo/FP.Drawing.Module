@@ -52,8 +52,20 @@ public record DrawingContext(Canvas Canvas, FPoint Cursor)
     public DrawingContext DrawPixel(FPoint point, char symbol)
         => DrawingTool.DrawPixel(Canvas, point, symbol);
 
+    public DrawingContext DrawPixel(char symbol)
+        => DrawingTool.DrawPixel(Canvas, Cursor, symbol);
+        
     public DrawingContext DrawLine(Direction direction, int length, char symbol)
         => DrawingTool.DrawLine(Canvas, Cursor, direction, length, symbol);
+
+    public DrawingContext DrawLineWhile(Direction direction, Func<FPoint, bool> condition, char symbol)
+        => DrawingTool.DrawLineWhile(Canvas, Cursor, direction, condition, symbol);
+
+    public DrawingContext MoveCursor(FPoint newCursor)
+        => this with { Cursor = newCursor };
+    
+    public DrawingContext MoveCursor(int deltaX, int deltaY)
+        => this with { Cursor = Cursor.Move(deltaX, deltaY) };
 }
 
 public static class DrawingTool
@@ -93,6 +105,26 @@ public static class DrawingTool
         for (int i = 0; i < length; i++)
         {
             currentPoint = currentPoint.Move(deltaX, deltaY);
+            currentCanvas = currentCanvas.DrawPixel(currentPoint, symbol);
+        }
+
+        return new DrawingContext(currentCanvas, currentPoint);
+    }
+
+    public static DrawingContext DrawLineWhile(Canvas canvas, FPoint start, Direction direction, Func<FPoint, bool> condition, char symbol)
+    {
+        var currentCanvas = canvas;
+        var currentPoint = start;
+
+        var (deltaX, deltaY) = DirectionDeltas[direction];
+
+        while (true)
+        {
+            currentPoint = currentPoint.Move(deltaX, deltaY);
+            if (!condition(currentPoint))
+            {
+                break;
+            }
             currentCanvas = currentCanvas.DrawPixel(currentPoint, symbol);
         }
 

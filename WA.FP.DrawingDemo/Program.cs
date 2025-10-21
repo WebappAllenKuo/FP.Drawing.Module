@@ -28,6 +28,32 @@ namespace WA.FP.DrawingDemo
             
             System.Console.WriteLine("範例2: 繪製右上,左下直線");
             Console.WriteLine(context.Canvas.Render());
+
+
+            canvas = new Canvas(20, 20);
+            context = new DrawingContext(canvas, new FPoint(0, 0));
+
+            context = context
+                .DrawPixel(new FPoint(0, 0), '*')
+                .DrawLineWhile(Direction.Right, p => p.X < 5, '-') 
+                .DrawLineWhile(Direction.Down, p => p.Y < 5, '|')
+                ; 
+            
+            System.Console.WriteLine("範例3: DrawLineWhile");
+            Console.WriteLine(context.Canvas.Render());
+
+
+            canvas = new Canvas(20, 20);
+            context = new DrawingContext(canvas, new FPoint(0, 0));
+
+            context = context
+                .DrawPixel(new FPoint(0, 0), '1')
+                .MoveCursor(3, 3).DrawPixel('2')
+                .MoveCursor(new FPoint(10, 10)).DrawPixel('3')
+                ; 
+            
+            System.Console.WriteLine("範例4: 絕對位置,相對位置的Move");
+            Console.WriteLine(context.Canvas.Render());
         }
     }
 }
